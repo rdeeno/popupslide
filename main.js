@@ -1,10 +1,10 @@
 var imageGrid = document.querySelector(".image__grid");
 var overlay = document.querySelector(".overlay");
 var closeBtn = document.querySelector(".closeBtn");
-var slideWrapper = document.querySelector(".sliderWrapper");
-var elements = [...document.querySelectorAll(".img img")];
 var next = document.querySelector(".right");
 var prev = document.querySelector(".left");
+var slideWrapper = document.querySelector(".sliderWrapper");
+var elements = [...document.querySelectorAll(".img img")];
 var slide = [...document.querySelectorAll(".slide")];
 let current = 0;
 var clickedImg;
@@ -16,7 +16,9 @@ prev.addEventListener("click", function () {
 });
 overlay.addEventListener("click", closeHelpers)
 closeBtn.addEventListener("click", closeHelpers)
-imageGrid.addEventListener("click", function (e) {
+imageGrid.addEventListener("click", getClickImg);
+
+function getClickImg(e) {
     e.stopPropagation();
     var target = e.target;
     clickedImg = elements.indexOf(target);
@@ -26,7 +28,7 @@ imageGrid.addEventListener("click", function (e) {
     slideWrapper.classList.add("visible");
     slide[clickedImg].classList.add("active");
     current = clickedImg;
-});
+}
 
 function slideChange(dir) {
     slide[current].classList.remove("active");
