@@ -1,49 +1,51 @@
-var imageGrid = document.querySelector(".image__grid");
+var imageGrid = [...document.querySelectorAll(".image__grid")];
 var overlay = document.querySelector(".overlay");
 var closeBtn = document.querySelector(".closeBtn");
-var next = document.querySelector(".right");
-var prev = document.querySelector(".left");
+var nextBtn = document.querySelector(".right");
+var prevBtn = document.querySelector(".left");
 var slideWrapper = document.querySelector(".sliderWrapper");
-var elements = [...document.querySelectorAll(".img img")];
-var slide = [...document.querySelectorAll(".slide")];
+var imageGridElms = [...document.querySelectorAll(".img img")];
+var slideElm = [...slideWrapper.querySelectorAll(".slide")];
 let current = 0;
 var clickedImg;
-next.addEventListener("click", function () {
+nextBtn.addEventListener("click", function () {
     slideChange('next')
 });
-prev.addEventListener("click", function () {
+prevBtn.addEventListener("click", function () {
     slideChange('prev')
 });
 overlay.addEventListener("click", closeHelpers)
 closeBtn.addEventListener("click", closeHelpers)
-imageGrid.addEventListener("click", getClickImg);
+imageGrid.forEach(el => {
+    el.addEventListener("click", getClickImg);
+})
 
 function getClickImg(e) {
     e.stopPropagation();
     var target = e.target;
-    clickedImg = elements.indexOf(target);
+    clickedImg = imageGridElms.indexOf(target);
     var checkIfImg = target.closest("img");
     if (!checkIfImg) return;
-    overlay.style.transform = "translateY(0)";
     slideWrapper.classList.add("visible");
-    slide[clickedImg].classList.add("active");
+    document.querySelector('.helper').classList.add('visible')
+    slideElm[clickedImg].classList.add("active");
     current = clickedImg;
 }
 
 function slideChange(dir) {
-    slide[current].classList.remove("active");
-    slide[clickedImg].classList.remove("active");
+    slideElm[current].classList.remove("active");
+    slideElm[clickedImg].classList.remove("active");
     current = dir === 'next' ? current += 1 : current -= 1;
-    if (current >= slide.length) {
+    if (current >= slideElm.length) {
         current = 0;
     } else if (current < 0) {
-        current = slide.length - 1;
+        current = slideElm.length - 1;
     }
-    slide[current].classList.add("active");
+    slideElm[current].classList.add("active");
 }
 
 function closeHelpers() {
-    overlay.style.transform = "translateY(-100%)";
+    document.querySelector('.helper').classList.remove('visible')
     slideWrapper.classList.remove("visible");
-    slide[current].classList.remove("active");
+    slideElm[current].classList.remove("active");
 }
