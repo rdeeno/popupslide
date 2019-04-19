@@ -1,47 +1,60 @@
 class modalSlide {
-    constructor() {
-        this.imageGrid = document.querySelector(".image__grid");
+    constructor(selector, options) {
+        var defaults = {
+            slideContainer: '.slideWrapper'
+        }
+        this.params = Object.assign({}, defaults, options)
+        this.imageGrid = selector;
+        this.imageGridElms = [...this.imageGrid.querySelectorAll(".img img")];
+        this.slideWrapper = document.querySelectorAll(this.params.slideContainer); /*ВОТ ЗДЕСЬ*/
+        this.slideWrapperElms = [...document.querySelectorAll(".slide")];
         this.overlay = document.querySelector(".overlay");
         this.closeBtn = document.querySelector(".closeBtn");
-        this.slideWrapper = document.querySelector(".sliderWrapper");
-        this.elements = [...document.querySelectorAll(".img img")];
-        this.next = document.querySelector(".right");
-        this.prev = document.querySelector(".left");
-        this.slide = [...document.querySelectorAll(".slide")];
+        this.nextBtn = document.querySelector(".right");
+        this.prevBtn = document.querySelector(".left");
+
         this.current = 0;
         this.clickedImg;
         this.imageGrid.addEventListener("click", this.getElements.bind(this));
-        this.next.addEventListener("click", this.slideChange.bind(this, 'next'));
-        this.prev.addEventListener("click", this.slideChange.bind(this, 'prev'));
+        this.nextBtn.addEventListener("click", this.slideChange.bind(this, 'next'));
+        this.prevBtn.addEventListener("click", this.slideChange.bind(this, 'prev'));
         this.overlay.addEventListener("click", this.closeHelpers.bind(this));
         this.closeBtn.addEventListener("click", this.closeHelpers.bind(this))
+        console.log(this.slideWrapper);
     }
     getElements(e) {
         e.stopPropagation();
         var target = e.target;
-        this.clickedImg = this.elements.indexOf(target);
+        this.clickedImg = this.imageGridElms.indexOf(target);
         var checkIfImg = target.closest("img");
         if (!checkIfImg) return;
-        this.overlay.style.transform = "translateY(0)";
+        document.querySelector('.helper').classList.add('visible');
         this.slideWrapper.classList.add("visible");
-        this.slide[this.clickedImg].classList.add("active");
+        this.slideWrapperElms[this.clickedImg].classList.add("active");
         this.current = this.clickedImg;
     }
     slideChange(dir) {
-        this.slide[this.current].classList.remove("active");
-        this.slide[this.clickedImg].classList.remove("active");
+        this.slideWrapperElms[this.current].classList.remove("active");
+        this.slideWrapperElms[this.clickedImg].classList.remove("active");
         this.current = dir === 'next' ? this.current += 1 : this.current -= 1;
-        if (this.current >= this.slide.length) {
+        if (this.current >= this.slideWrapperElms.length) {
             this.current = 0;
         } else if (this.current < 0) {
-            this.current = this.slide.length - 1;
+            this.current = this.slideWrapperElms.length - 1;
         }
-        this.slide[this.current].classList.add("active");
+        this.slideWrapperElms[this.current].classList.add("active");
     }
     closeHelpers() {
-        this.overlay.style.transform = "translateY(-100%)";
+        document.querySelector('.helper').classList.remove('visible');
         this.slideWrapper.classList.remove("visible");
-        this.slide[this.current].classList.remove("active");
+        this.slideWrapperElms[this.current].classList.remove("active");
     }
 }
-new modalSlide()
+var item = document.querySelector('.image__grid')
+var itemSecond = document.querySelector('.image__grid-second')
+new modalSlide(item, {
+    slideContainer: '.slideWrapper'
+})
+new modalSlide(itemSecond, {
+    slideContainer: '.slideWrapper-second'
+})
